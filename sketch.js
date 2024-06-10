@@ -8,8 +8,8 @@ class Walker {
 	}
 
 	show() {
-		// Add the current point with full opacity to the points array
-		points.push({ x: this.x, y: this.y, opacity: 255 });
+		// Add the current point with full opacity and current hueValue to the points array
+		points.push({ x: this.x, y: this.y, opacity: 255, hue: hueValue });
 	}
 
 	step() {
@@ -17,16 +17,16 @@ class Walker {
 
 		switch (choice) {
 			case 0:
-				this.x += 10;
+				this.x += 12;
 				break;
 			case 1:
-				this.x -= 10;
+				this.x -= 12;
 				break;
 			case 2:
-				this.y += 10;
+				this.y += 12;
 				break;
 			case 3:
-				this.y -= 10;
+				this.y -= 12;
 				break;
 			default:
 				break;
@@ -44,10 +44,8 @@ function setup() {
 }
 
 function draw() {
-	console.log(walker.x, walker.y);
-
-	// Restrict hueValue to the rainbow range (0 to 270 degrees)
-	hueValue = (hueValue + 1) % 101;
+	// Restrict hueValue to the rainbow range (0 to 360 degrees)
+	hueValue = (hueValue + 1) % 361;
 
 	if (walker.x < 0 || walker.x > width || walker.y < 0 || walker.y > height) {
 		walker.x = width / 2;
@@ -56,7 +54,7 @@ function draw() {
 
 	// Reduce opacity of all points and remove points that become completely transparent
 	for (let i = points.length - 1; i >= 0; i--) {
-		points[i].opacity -= 5;
+		points[i].opacity -= 3;
 		if (points[i].opacity <= 0) {
 			points.splice(i, 1);
 		}
@@ -67,10 +65,10 @@ function draw() {
 	background(240);
 	colorMode(HSB, 360, 100, 100);
 
-	// Draw all points with their current opacity
+	// Draw all points with their current opacity and hue
 	for (let pt of points) {
-		stroke(hueValue, 100, 60, pt.opacity);
-		strokeWeight(2);
+		stroke(pt.hue, 100, 60, pt.opacity);
+		strokeWeight(4);
 		point(pt.x, pt.y);
 	}
 
